@@ -10,37 +10,39 @@
         google.charts.load('current', { 'packages': ['corechart'] });
         google.charts.setOnLoadCallback(drawChart);
 
-        var labels = ['20.03', '21.03', '22.03', '23.03', '24.03', '25.03', '26.03', '27.03', '28.03', '29.03', '30.03', '31.03', '01.04', '02.04', '03.04', '04.04', '05.04', '06.04'];
-        var daily_new_death_series = [0, 0, 0, 2, 5, 4, 2, 4, 7, 5, 11, 4, 25, 16, 9, 39, 8, 7];
-        var daily_new_case_series = [17, 31, 59, 66, 143, 186, 144, 123, 263, 160, 308, 192, 293, 215, 278, 445, 430, 251];
-
+        var labels = ['20.03', '21.03', '22.03', '23.03', '24.03', '25.03', '26.03', '27.03', '28.03', '29.03', '30.03', '31.03', '01.04', '02.04', '03.04', '04.04', '05.04', '06.04', '07.04', '08.04', '09.04'];
+        var daily_new_death_series = [0, 0, 0, 2, 5, 4, 2, 4, 7, 5, 11, 4, 25, 16, 9, 39, 8, 7, 25, 27, 20];
+        var daily_new_case_series = [17, 31, 59, 66, 143, 186, 144, 123, 263, 160, 308, 192, 293, 215, 278, 445, 430, 251, 360, 344, 441];
+        var daily_new_samples = [3311, 631, 1052, 1122, 1256, 1256, 1401, 1842, 1532, 1455, 2210, 1797, 1643, 1551, 1955, 1874, 3174, 4435, 4895, 2591, 3629, 4595];
+        var start_samples = 4973;
+        var start_cases = 277;
 
         function drawChart() {
-            var data = google.visualization.arrayToDataTable([
-                ['Date', 'New cases', 'New death'],
-                [labels[0], daily_new_case_series[0], daily_new_death_series[0]],
-                [labels[1], daily_new_case_series[1], daily_new_death_series[1]],
-                [labels[2], daily_new_case_series[2], daily_new_death_series[2]],
-                [labels[3], daily_new_case_series[3], daily_new_death_series[3]],
-                [labels[4], daily_new_case_series[4], daily_new_death_series[4]],
-                [labels[5], daily_new_case_series[5], daily_new_death_series[5]],
-                [labels[6], daily_new_case_series[6], daily_new_death_series[6]],
-                [labels[7], daily_new_case_series[7], daily_new_death_series[7]],
-                [labels[8], daily_new_case_series[8], daily_new_death_series[8]],
-                [labels[9], daily_new_case_series[9], daily_new_death_series[9]],
-                [labels[10], daily_new_case_series[10], daily_new_death_series[10]],
-                [labels[11], daily_new_case_series[11], daily_new_death_series[11]],
-                [labels[12], daily_new_case_series[12], daily_new_death_series[12]],
-                [labels[13], daily_new_case_series[13], daily_new_death_series[13]],
-                [labels[14], daily_new_case_series[14], daily_new_death_series[14]],
-                [labels[15], daily_new_case_series[15], daily_new_death_series[15]],
-                [labels[16], daily_new_case_series[16], daily_new_death_series[16]],
-                [labels[17], daily_new_case_series[17], daily_new_death_series[17]],
-                [labels[18], daily_new_case_series[18], daily_new_death_series[18]]
-            ]);
+            var nrOfDays = labels.length
 
-            var options = {
-                title: 'Company Performance',
+            var new_cases = [['Date', 'New cases', 'Tests']];
+            for (i = 0; i < nrOfDays; i++) {
+                new_cases.push([labels[i], daily_new_case_series[i], daily_new_samples[i]])
+            }
+
+            var new_death = [['Date', 'New deaths']];
+            for (i = 0; i < nrOfDays; i++) {
+                new_death.push([labels[i], daily_new_death_series[i]])
+            }
+
+            var allCases = [['Date', 'Total cases', 'Total deaths']];
+            var nrOfCases = start_cases;
+            var nrOfDeath = 0;
+            for (i = 0; i < nrOfDays; i++) {
+                nrOfCases = nrOfCases + daily_new_case_series[i]
+                nrOfDeath = nrOfDeath + daily_new_death_series[i]
+                allCases.push([labels[i], nrOfCases, nrOfDeath]);                
+            }
+
+
+            var new_cases_data = google.visualization.arrayToDataTable(new_cases);
+            var new_cases_options = {
+                title: 'Daily new cases',
                 curveType: 'function',
                 legend: { position: 'bottom' },
                 width: 900,
@@ -52,15 +54,49 @@
                 }
 
             };
+            var new_cases_chart = new google.visualization.LineChart(document.getElementById('new_cases'));
+            new_cases_chart.draw(new_cases_data, new_cases_options);
 
-            var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
 
-            chart.draw(data, options);
+            var new_deaths_data = google.visualization.arrayToDataTable(new_death);
+            var new_deaths_options = {
+                title: 'Daily new death',
+                curveType: 'function',
+                legend: { position: 'bottom' },
+                width: 900,
+                height: 500,
+                axes: {
+                    x: {
+                        0: { side: 'top' }
+                    }
+                }
+
+            };
+            var new_deaths_chart = new google.visualization.LineChart(document.getElementById('new_death'));
+            new_deaths_chart.draw(new_deaths_data, new_deaths_options);
+
+            var all_cases_data = google.visualization.arrayToDataTable(allCases);
+            var all_cases_options = {
+                title: 'All cases',
+                curveType: 'function',
+                legend: { position: 'bottom' },
+                width: 900,
+                height: 500,
+                axes: {
+                    x: {
+                        0: { side: 'top' }
+                    }
+                }
+
+            };
+            var all_cases_chart = new google.visualization.LineChart(document.getElementById('all_cases'));
+            all_cases_chart.draw(all_cases_data, all_cases_options);
         }
     </script>
 
-    <!--Div that will hold the pie chart-->
-    <div id="curve_chart"></div>
+    <div id="all_cases"></div>
+    <div id="new_cases"></div>
+    <div id="new_death"></div>
 </body>
 
 </html>
