@@ -36,7 +36,7 @@
             for (i = 0; i < nrOfDays; i++) {
                 nrOfCases = nrOfCases + daily_new_case_series[i]
                 nrOfDeath = nrOfDeath + daily_new_death_series[i]
-                allCases.push([labels[i], nrOfCases, nrOfDeath]);                
+                allCases.push([labels[i], nrOfCases, nrOfDeath]);
             }
 
 
@@ -51,8 +51,18 @@
                     x: {
                         0: { side: 'top' }
                     }
+                },
+                vAxis: {
+                    viewWindowMode: 'explicit',
+                    viewWindow: {
+                        min: 0
+                    }
+                },
+                animation: {
+                    startup: true,
+                    duration: 1000,
+                    easing: 'out'
                 }
-
             };
             var new_cases_chart = new google.visualization.LineChart(document.getElementById('new_cases'));
             new_cases_chart.draw(new_cases_data, new_cases_options);
@@ -69,8 +79,18 @@
                     x: {
                         0: { side: 'top' }
                     }
+                },
+                vAxis: {
+                    viewWindowMode: 'explicit',
+                    viewWindow: {
+                        min: 0
+                    }
+                },
+                animation: {
+                    startup: true,
+                    duration: 1000,
+                    easing: 'out'
                 }
-
             };
             var new_deaths_chart = new google.visualization.LineChart(document.getElementById('new_death'));
             new_deaths_chart.draw(new_deaths_data, new_deaths_options);
@@ -86,8 +106,18 @@
                     x: {
                         0: { side: 'top' }
                     }
+                },
+                vAxis: {
+                    viewWindowMode: 'explicit',
+                    viewWindow: {
+                        min: 0
+                    }
+                },
+                animation: {
+                    startup: true,
+                    duration: 1000,
+                    easing: 'out'
                 }
-
             };
             var all_cases_chart = new google.visualization.LineChart(document.getElementById('all_cases'));
             all_cases_chart.draw(all_cases_data, all_cases_options);
